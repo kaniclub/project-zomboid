@@ -60,7 +60,6 @@ if [ -f $server_ini_file ]
 then
     sed -ri "s/^Password=(.*)$/Password=${SERVER_PASSWORD}/" "${server_ini_file}"
     sed -ri "s/^PublicName=(.*)$/PublicName=${SERVER_PUBLIC_NAME}/" "${server_ini_file}"
-    sed -ri "s/^PublicDescription=(.*)$/PublicDescription=${SERVER_PUBLIC_DESC}/" "${server_ini_file}"
 
     sed -ri "s/^DefaultPort=([0-9]+)$/DefaultPort=${SERVER_PORT}/" "${server_ini_file}"
     sed -ri "s/^SteamPort1=([0-9]+)$/SteamPort1=${STEAM_PORT_1}/" "${server_ini_file}"

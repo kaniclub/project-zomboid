@@ -50,7 +50,7 @@ version: "3.7"
 
 services:
   project-zomboid:
-    image: ghcr.io/cyrale/project-zomboid
+    image: kaniclub/project-zomboid
     restart: unless-stopped
     environment:
       SERVER_NAME: "pzserver"
@@ -89,7 +89,7 @@ version: "3.7"
 
 services:
   project-zomboid:
-    image: ghcr.io/cyrale/project-zomboid
+    image: kaniclub/project-zomboid
     restart: unless-stopped
     environment:
       SERVER_NAME: "pzserver"
@@ -131,7 +131,6 @@ Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/li
 - **SERVER_NAME** Name of your server (for db & ini file). **Warning:** don't use special characters or spaces.
 - **SERVER_PASSWORD** Password of your server used to connect to it
 - **SERVER_PUBLIC_NAME** Public name of your server
-- **SERVER_PUBLIC_DESC** Public description of your server
 - **SERVER_BRANCH** Name of the beta branch
 - **SERVER_BETA_PASSWORD** Password for the beta branch
 - **ADMIN_PASSWORD** Admin password on your server

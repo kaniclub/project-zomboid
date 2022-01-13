@@ -15,8 +15,8 @@ ENV STEAM_PORT_1=8766  \
     ADMIN_PASSWORD="pzserver-password" \
     # Server port
     SERVER_PORT=16261 \
-    # Game UDP port to allow player to contact the server (by default : 10 players)
-    PLAYER_PORTS=16262-16272
+    # Game UDP port to allow player to contact the server (by default : 24 players)
+    PLAYER_PORTS=16262-16285
 
 # Switch to root to use apt-get
 USER root

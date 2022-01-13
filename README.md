@@ -36,7 +36,7 @@ docker run -d --name project-zomboid \
               -p 8766:8766/udp \
               -p 8767:8767/udp \
               -p 16261:16261/udp \
-              -p 16262-16272:16262-16272 \
+              -p 16262-16285:16262-16285 \
               -p 27015:27015 \
               ghcr.io/cyrale/project-zomboid
 ```
@@ -59,7 +59,7 @@ services:
       - "8766:8766/udp"
       - "8767:8767/udp"
       - "16261:16261/udp"
-      - "16262-16272:16262-16272"
+      - "16262-16285:16262-16285"
       - "27015:27015"
     volumes:
       - ./server-data:/server-data
@@ -135,7 +135,7 @@ Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/li
 - **SERVER_BETA_PASSWORD** Password for the beta branch
 - **ADMIN_PASSWORD** Admin password on your server
 - **SERVER_PORT** Game server port
-- **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16272 to allow 10 players)
+- **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16285 to allow 24 players)
 
 **STEAM_PORT_1**, **STEAM_PORT_2**, **RCON_PORT**, **RCON_PASSWORD**, **SERVER_PASSWORD**, **SERVER_PUBLIC_NAME**, **SERVER_PUBLIC_DESC** and **SERVER_PORT** are optional if you have access to the file `/server-data/Server/$SERVER_NAME.ini` where the values are.
 
@@ -154,4 +154,4 @@ Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/li
 - **16261** Game server (udp)
 - **16262-16XXX** Clients slots
 
-You need to bind X ports for client connection. (Example: If you have 10 slots, you need to put `-p 16262-16272:16262-16272`, if you have 100 slots, you need to put `-p 16262-16362:16262-16362`).
+You need to bind X ports for client connection. (Example: If you have 10 slots, you need to put `-p 16262-16285:16262-16285`, if you have 100 slots, you need to put `-p 16262-16362:16262-16362`).

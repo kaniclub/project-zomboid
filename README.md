@@ -1,7 +1,3 @@
-⚠️ 
-
-Sorry, I have no more time to maintain this project and I no longer play ProjectZomboid to properly follow its progress. Feel free to fork this project and continue this work on your side.
-
 # Project Zomboid server - Docker image
 
 Docker version of the Project Zomboid steam server.
@@ -10,16 +6,18 @@ Docker version of the Project Zomboid steam server.
 
 ### Before starting
 
-Create two directories where you want to run your server :
+Create four directories where you want to run your server :
 
-- `server-data`: mandatory if you want to keep configuration between each restart
-- `server-files`: optional, contains all the files of the application
+- `Zomboid`: mandatory if you want to keep configuration between each restart
+- `serverfiles`: optional, contains all the files of the application
+- `log`: optional, logs
+- `LGSM-Config`: optional, alerts
 
 If you have any errors with the permissions of these two directories, you can adjust it. It could be done with this commands:
 
 ```bash
-chown 1000:1000 server-data
-chown 1000:1000 server-files
+chown 1000:1000 Zomboid
+chown 1000:1000 serverfiles
 ```
 
 `1000:1000` represent the user and the group of the LinuxGSM\_ user that run server in the image.
@@ -32,13 +30,15 @@ chown 1000:1000 server-files
 docker run -d --name project-zomboid \
               -e SERVER_NAME="pzserver" \
               -e ADMIN_PASSWORD="pzserver-password" \
-              -v $(pwd)/server-data:/server-data \
+              -v $(pwd)/Zomboid:/home/linuxgsm/Zomboid \
+              -v $(pwd)/ServerFiles:/home/linuxgsm/serverfiles \
+              -v $(pwd)/log:/home/linuxgsm/log \
+              -v $(pwd)/LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver \
               -p 8766:8766/udp \
               -p 8767:8767/udp \
               -p 16261:16261/udp \
               -p 16262-16285:16262-16285 \
-              -p 27015:27015 \
-              ghcr.io/cyrale/project-zomboid
+              -p 27015:27015 
 ```
 
 #### Docker Compose
@@ -62,7 +62,10 @@ services:
       - "16262-16285:16262-16285"
       - "27015:27015"
     volumes:
-      - ./server-data:/server-data
+      - ./Zomboid:/home/linuxgsm/Zomboid/ #serverdatas
+      - ./ServerFiles:/home/linuxgsm/serverfiles/ #optional,serverfiles
+      - ./log:/home/linuxgsm/log/ #optional,logs
+      - ./LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver/ #optional,alerts
 ```
 
 After creating this file, launch the server with `docker-compose up`.
@@ -76,8 +79,10 @@ docker run -d --name project-zomboid \
               --network=host \
               -e SERVER_NAME="pzserver" \
               -e ADMIN_PASSWORD="pzserver-password" \
-              -v $(pwd)/server-data:/server-data \
-              ghcr.io/cyrale/project-zomboid
+              -v $(pwd)/Zomboid:/home/linuxgsm/Zomboid \
+              -v $(pwd)/ServerFiles:/home/linuxgsm/serverfiles \
+              -v $(pwd)/log:/home/linuxgsm/log \
+              -v $(pwd)/LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver
 ```
 
 #### Docker Compose
@@ -96,7 +101,10 @@ services:
       ADMIN_PASSWORD: "pzserver-password"
     network_mode: host
     volumes:
-      - ./server-data:/server-data
+      - ./Zomboid:/home/linuxgsm/Zomboid/ #serverdatas
+      - ./ServerFiles:/home/linuxgsm/serverfiles/ #optional,serverfiles
+      - ./log:/home/linuxgsm/log/ #optional,logs
+      - ./LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver/ #optional,alerts
 ```
 
 After creating this file, launch the server with `docker-compose up`.
@@ -121,8 +129,6 @@ Once you have run the docker for the first time, you can edit your config file i
 Some of options are not used in these two examples. Look below if you want to adjust your settings.
 
 ## Variables
-
-Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/linuxgsm#variables).
 
 - **STEAM_PORT_1** Steam port 1 (default: 8766)
 - **STEAM_PORT_2** Steam port 2 (default: 8767)

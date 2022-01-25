@@ -10,6 +10,10 @@ source /lgsm_variables.sh
 
 if [ $# = 0 ]
 then
+    # Locale, Timezone
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+    ln -snf /usr/share/zoneinfo/$TimeZone /etc/localtime && echo $TimeZone > /etc/timezone
+    
     # no command
     fn_check_user
 

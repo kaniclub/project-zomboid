@@ -2,27 +2,22 @@
 
 Docker version of the Project Zomboid steam server.
 
-## How to use this image
+## 使い方
 
-### Before starting
+### 始める前に
 
-Create four directories where you want to run your server :
+サーバーを実行する２つのディレクトリを作成してください。
 
-- `Zomboid`: mandatory if you want to keep configuration between each restart
-- `serverfiles`: optional, contains all the files of the application
-- `log`: optional, logs
-- `LGSM-Config`: optional, alerts
+- `server-data`: 再起動のたびに構成を保持する場合は必須
+- `server-files`: (オプション) アプリケーションのすべてのファイルが含まれています
 
-If you have any errors with the permissions of these two directories, you can adjust it. It could be done with this commands:
+ディレクトリの権限を調整してください
 
 ```bash
-chown 1000:1000 Zomboid
-chown 1000:1000 serverfiles
+chown 1000:1000 server-data
+chown 1000:1000 server-files
 ```
 
-`1000:1000` represent the user and the group of the LinuxGSM\_ user that run server in the image.
-
-### Bridge networking
 
 #### Docker command
 
@@ -30,10 +25,8 @@ chown 1000:1000 serverfiles
 docker run -d --name project-zomboid \
               -e SERVER_NAME="pzserver" \
               -e ADMIN_PASSWORD="pzserver-password" \
-              -v $(pwd)/Zomboid:/home/linuxgsm/Zomboid \
-              -v $(pwd)/ServerFiles:/home/linuxgsm/serverfiles \
-              -v $(pwd)/log:/home/linuxgsm/log \
-              -v $(pwd)/LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver \
+              -v $(pwd)/server-data:/server-data \
+              -v $(pwd)/server-files:/server-files \
               -p 8766:8766/udp \
               -p 8767:8767/udp \
               -p 16261:16261/udp \
@@ -43,14 +36,12 @@ docker run -d --name project-zomboid \
 
 #### Docker Compose
 
-Alternatively, you could use Docker Compose with this `docker-compose.yml` file:
-
 ```yaml
 version: "3.7"
 
 services:
   project-zomboid:
-    image: kaniclub/project-zomboid
+    image: kaniclub/project-zomboid:latest
     restart: unless-stopped
     environment:
       SERVER_NAME: "pzserver"
@@ -62,13 +53,11 @@ services:
       - "16262-16285:16262-16285"
       - "27015:27015"
     volumes:
-      - ./Zomboid:/home/linuxgsm/Zomboid/ #serverdatas
-      - ./ServerFiles:/home/linuxgsm/serverfiles/ #optional,serverfiles
-      - ./log:/home/linuxgsm/log/ #optional,logs
-      - ./LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver/ #optional,alerts
+      - ./server-data:/server-data
+      - ./server-files:/server-files
 ```
 
-After creating this file, launch the server with `docker-compose up`.
+ファイルを作成後コマンドを実行 `docker-compose up`.
 
 ### Host networking
 
@@ -79,35 +68,29 @@ docker run -d --name project-zomboid \
               --network=host \
               -e SERVER_NAME="pzserver" \
               -e ADMIN_PASSWORD="pzserver-password" \
-              -v $(pwd)/Zomboid:/home/linuxgsm/Zomboid \
-              -v $(pwd)/ServerFiles:/home/linuxgsm/serverfiles \
-              -v $(pwd)/log:/home/linuxgsm/log \
-              -v $(pwd)/LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver
+              -v $(pwd)/server-data:/server-data \
+              -v $(pwd)/server-files:/server-files 
 ```
 
 #### Docker Compose
-
-Alternatively, you could use Docker Compose with this `docker-compose.yml` file:
 
 ```yaml
 version: "3.7"
 
 services:
   project-zomboid:
-    image: kaniclub/project-zomboid
+    image: kaniclub/project-zomboid:latest
     restart: unless-stopped
     environment:
       SERVER_NAME: "pzserver"
       ADMIN_PASSWORD: "pzserver-password"
     network_mode: host
     volumes:
-      - ./Zomboid:/home/linuxgsm/Zomboid/ #serverdatas
-      - ./ServerFiles:/home/linuxgsm/serverfiles/ #optional,serverfiles
-      - ./log:/home/linuxgsm/log/ #optional,logs
-      - ./LGSM-Config:/home/linuxgsm/lgsm/config-lgsm/pzserver/ #optional,alerts
+      - ./server-data:/server-data
+      - ./server-files:/server-files
 ```
 
-After creating this file, launch the server with `docker-compose up`.
+ファイルを作成後コマンドを実行 `docker-compose up`.
 
 #### Specifying IP address
 
@@ -124,9 +107,10 @@ LGSM_SERVER_CONFIG: |
 
 ### After starting
 
-Once you have run the docker for the first time, you can edit your config file in your mapped directory `/server-data/Server/$SERVER_NAME.ini`. When it's done, restart your server.
+初めて実行したときに、設定ファイルが作成されます。 `/server-data/Server/$SERVER_NAME.ini`
+設定変更後、サーバーを再起動します。
 
-Some of options are not used in these two examples. Look below if you want to adjust your settings.
+### その他設定
 
 ## Variables
 
@@ -141,9 +125,8 @@ Some of options are not used in these two examples. Look below if you want to ad
 - **SERVER_BETA_PASSWORD** Password for the beta branch
 - **ADMIN_PASSWORD** Admin password on your server
 - **SERVER_PORT** Game server port
-- **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16285 to allow 24 players)
+- **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16272 to allow 10 players)
 
-**STEAM_PORT_1**, **STEAM_PORT_2**, **RCON_PORT**, **RCON_PASSWORD**, **SERVER_PASSWORD**, **SERVER_PUBLIC_NAME**, **SERVER_PUBLIC_DESC** and **SERVER_PORT** are optional if you have access to the file `/server-data/Server/$SERVER_NAME.ini` where the values are.
 
 **SERVER_BRANCH**, **SERVER_BETA_PASSWORD** and **ADMIN_PASSWORD** are not used if these values are set by **LGSM_COMMON_CONFIG**, **LGSM_COMMON_CONFIG_FILE**, **LGSM_SERVER_CONFIG** or **LGSM_SERVER_CONFIG_FILE**. These 4 variables from [cyrale/linuxgsm](https://github.com/cyrale/linuxgsm#variables) can override default settings from LinuxGSM\_: [\_default.cfg](https://github.com/GameServerManagers/LinuxGSM/blob/master/lgsm/config-default/config-lgsm/pzserver/_default.cfg).
 

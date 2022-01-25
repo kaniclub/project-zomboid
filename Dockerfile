@@ -13,10 +13,9 @@ ENV LGSM_VERSION="latest" \
     LGSM_COMMON_CONFIG="" \
     LGSM_COMMON_CONFIG_FILE="" \
     LGSM_SERVER_CONFIG="" \
-    LGSM_SERVER_CONFIG_FILE=""
-
-# Steam ports
-ENV STEAM_PORT_1=8766  \
+    LGSM_SERVER_CONFIG_FILE="" \
+    # Steam ports
+    STEAM_PORT_1=8766  \
     STEAM_PORT_2=8767 \
     # RCON
     RCON_PORT=27015 \
@@ -68,8 +67,9 @@ RUN dpkg --add-architecture i386 && \
         tmux \
         util-linux \
         unzip \
+        rng-tools \
+        xz-utils \
         wget && \
-        rng-tools && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
@@ -95,7 +95,8 @@ RUN npm set progress=false && \
 RUN localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
 ENV LANG="ja_JP.UTF-8" \
     LANGUAGE="ja_JP:ja" \
-    LC_ALL="ja_JP.UTF-8"
+    LC_ALL="ja_JP.UTF-8" \
+    TimeZone=Asia/Tokyo
 
 # Add the steam user
 RUN adduser \
@@ -112,15 +113,20 @@ RUN chmod +x /*.sh
 # Create server directories and link to access them
 RUN [ -d /home/linuxgsm/Zomboid ] || mkdir -p /home/linuxgsm/Zomboid && \
     chown linuxgsm:linuxgsm /home/linuxgsm/Zomboid && \
+    ln -s /home/linuxgsm/Zomboid /server-data && \
     [ -d /home/linuxgsm/serverfiles ] || mkdir -p /home/linuxgsm/serverfiles && \
-    chown linuxgsm:linuxgsm /home/linuxgsm/serverfiles
-
+    chown linuxgsm:linuxgsm /home/linuxgsm/serverfiles && \
+    ln -s /home/linuxgsm/serverfiles /server-files
 # Switch to the user steam
 USER linuxgsm
 WORKDIR /home/linuxgsm
 
 # Make server port available to host : (10 slots)
 EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS} ${RCON_PORT}
+
+# Persistant folder
+VOLUME ["/server-data", "/server-files"]
+
 
 ENTRYPOINT ["/entrypoint.sh"]
 

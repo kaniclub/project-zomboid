@@ -96,7 +96,8 @@ RUN localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
 ENV LANG="ja_JP.UTF-8" \
     LANGUAGE="ja_JP:ja" \
     LC_ALL="ja_JP.UTF-8" \
-    TimeZone=Asia/Tokyo
+    TimeZone=Asia/Tokyo \
+    PUID=1000 PGID=1000
 
 # Add the steam user
 RUN adduser \

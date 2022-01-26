@@ -126,6 +126,9 @@ LGSM_SERVER_CONFIG: |
 - **ADMIN_PASSWORD** Admin password on your server
 - **SERVER_PORT** Game server port
 - **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16272 to allow 10 players)
+- **TimeZone**
+- **PUID**
+- **PGID**
 
 
 **SERVER_BRANCH**, **SERVER_BETA_PASSWORD** and **ADMIN_PASSWORD** are not used if these values are set by **LGSM_COMMON_CONFIG**, **LGSM_COMMON_CONFIG_FILE**, **LGSM_SERVER_CONFIG** or **LGSM_SERVER_CONFIG_FILE**. These 4 variables from [cyrale/linuxgsm](https://github.com/cyrale/linuxgsm#variables) can override default settings from LinuxGSM\_: [\_default.cfg](https://github.com/GameServerManagers/LinuxGSM/blob/master/lgsm/config-default/config-lgsm/pzserver/_default.cfg).
